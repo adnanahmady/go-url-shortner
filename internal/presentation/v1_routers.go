@@ -17,6 +17,7 @@ func NewV1Routers(
 }
 
 func (r *V1Routers) Register() {
+	r.server.Handle("/", r.v1Handlers.Index)
 	r.server.Handle("/shorten", r.v1Handlers.CreateShortUrl)
 	r.server.Handle("/{shortUrl}", r.v1Handlers.RedirectToOriginalUrl)
 }

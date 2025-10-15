@@ -21,7 +21,6 @@ func (l *LoggingMiddleware) Middleware(next http.HandlerFunc) http.HandlerFunc {
 			Key:   "request_id",
 			Value: uuid.New().String(),
 		})
-		rLogger.Info("Logging middleware")
 
 		ctx := SetLogger(r.Context(), rLogger)
 		ctx = SetRequestID(ctx, uuid.New().String())

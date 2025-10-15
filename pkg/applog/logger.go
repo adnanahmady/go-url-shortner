@@ -44,16 +44,13 @@ func (al *ApplicationLogger) With(args ...Arg) Logger {
 }
 
 func (al *ApplicationLogger) Section(section string, operation string) Logger {
-	newLgr := NewApplicationLogger()
-	for _, arg := range al.args {
-		newLgr.lgr = newLgr.lgr.With(arg.Key, arg.Value)
-	}
-	newLgr.args = append(
-		newLgr.args,
+	args := append(
+		al.args,
 		Arg{Key: "section", Value: section},
 		Arg{Key: "operation", Value: operation},
 	)
-	return newLgr
+	
+	return al.With(args...)
 }
 
 func (al *ApplicationLogger) Debug(message string, args ...any) {
