@@ -1,6 +1,7 @@
 package store
 
 import (
+	"encoding/json"
 	"sync"
 )
 
@@ -9,8 +10,11 @@ type StoreManager interface {
 	Get(key string) (string, error)
 	Has(key string) bool
 	HasUrl(url string) (string, bool)
+	LoadFromJSON(data []byte) error
 	Lock()
 	Unlock()
+	ToJSON() ([]byte, error)
+	Count() int
 }
 
 type MemoryStoreManager struct {
@@ -23,6 +27,22 @@ func NewMemoryStore() *MemoryStoreManager {
 		mu: &sync.Mutex{},
 		urls: make(map[string]string),
 	}
+}
+
+func (s *MemoryStoreManager) Count() int {
+	return len(s.urls)
+}
+
+func (s *MemoryStoreManager) LoadFromJSON(data []byte) error {
+	err := json.Unmarshal(data, &s.urls)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *MemoryStoreManager) ToJSON() ([]byte, error) {
+	return json.Marshal(s.urls)
 }
 
 func (s *MemoryStoreManager) Has(key string) bool {

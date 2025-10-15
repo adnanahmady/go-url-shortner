@@ -19,6 +19,7 @@ type App struct {
 	Logger applog.Logger
 	LoggingMiddleware *request.LoggingMiddleware
 	V1Routers *presentation.V1Routers
+	StoreManager store.StoreManager
 }
 
 var AppSet = wire.NewSet(

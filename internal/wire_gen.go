@@ -34,6 +34,7 @@ func InitializeServer() (*App, error) {
 		Logger:            applicationLogger,
 		LoggingMiddleware: loggingMiddleware,
 		V1Routers:         v1Routers,
+		StoreManager:      memoryStoreManager,
 	}
 	return app, nil
 }
@@ -45,6 +46,7 @@ type App struct {
 	Logger            applog.Logger
 	LoggingMiddleware *request.LoggingMiddleware
 	V1Routers         *presentation.V1Routers
+	StoreManager      store.StoreManager
 }
 
 var AppSet = wire.NewSet(applog.NewApplicationLogger, wire.Bind(new(applog.Logger), new(*applog.ApplicationLogger)), store.NewMemoryStore, wire.Bind(new(store.StoreManager), new(*store.MemoryStoreManager)), request.NewServer, request.NewLoggingMiddleware, presentation.NewV1Routers, presentation.NewV1Handlers, infra.NewMemoryUrlRepository, wire.Bind(new(domain.UrlRepository), new(*infra.MemoryUrlRepository)), application.NewCreateShortUrlUseCaseImpl, wire.Bind(new(application.CreateShortUrlUseCase), new(*application.CreateShortUrlUseCaseImpl)), application.NewGetShortUrlUseCaseImpl, wire.Bind(new(application.GetShortUrlUseCase), new(*application.GetShortUrlUseCaseImpl)), wire.Struct(new(App), "*"))
