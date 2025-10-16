@@ -9,10 +9,23 @@ import (
 	"github.com/adnanahmady/go-url-shortner/internal"
 )
 
-const (
+var (
 	storageFile = "urls.json"
 	port        = ":5000"
 )
+
+func init() {
+	storageFile = os.Getenv("STORAGE_FILE")
+	if storageFile == "" {
+		storageFile = "urls.json"
+	}
+	port = os.Getenv("APP_PORT")
+	if port == "" {
+		port = ":5000"
+	} else {
+		port = ":" + port
+	}
+}
 
 func main() {
 	c := make(chan os.Signal, 1)
