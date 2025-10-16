@@ -10,7 +10,7 @@ import (
 
 type V1Handlers struct {
 	create application.CreateShortUrlUseCase
-	get application.GetShortUrlUseCase
+	get    application.GetShortUrlUseCase
 }
 
 func NewV1Handlers(
@@ -19,7 +19,7 @@ func NewV1Handlers(
 ) *V1Handlers {
 	return &V1Handlers{
 		create: create,
-		get: get,
+		get:    get,
 	}
 }
 

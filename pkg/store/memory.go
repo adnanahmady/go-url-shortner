@@ -15,22 +15,28 @@ type StoreManager interface {
 	Unlock()
 	ToJSON() ([]byte, error)
 	Count() int
+	Clear() error
 }
 
 type MemoryStoreManager struct {
-	mu *sync.Mutex
+	mu   *sync.Mutex
 	urls map[string]string
 }
 
 func NewMemoryStore() *MemoryStoreManager {
 	return &MemoryStoreManager{
-		mu: &sync.Mutex{},
+		mu:   &sync.Mutex{},
 		urls: make(map[string]string),
 	}
 }
 
 func (s *MemoryStoreManager) Count() int {
 	return len(s.urls)
+}
+
+func (s *MemoryStoreManager) Clear() error {
+	s.urls = make(map[string]string)
+	return nil
 }
 
 func (s *MemoryStoreManager) LoadFromJSON(data []byte) error {

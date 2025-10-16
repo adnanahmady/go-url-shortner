@@ -10,16 +10,16 @@ import (
 type Middleware func(http.HandlerFunc) http.HandlerFunc
 
 type Server struct {
-	mux *http.ServeMux
+	mux         *http.ServeMux
 	middlewares []Middleware
-	logger applog.Logger
+	logger      applog.Logger
 }
 
 func NewServer(logger applog.Logger) *Server {
 	return &Server{
-		mux: http.NewServeMux(),
+		mux:         http.NewServeMux(),
 		middlewares: []Middleware{},
-		logger: logger,
+		logger:      logger,
 	}
 }
 

@@ -47,7 +47,7 @@ func (l *LoggingMiddleware) Middleware(next http.HandlerFunc) http.HandlerFunc {
 // writerWrapper is a wrapper around the http.ResponseWriter that logs the response status and body
 type writerWrapper struct {
 	http.ResponseWriter
-	logger     applog.Logger
+	logger applog.Logger
 }
 
 func (w *writerWrapper) WriteHeader(statusCode int) {

@@ -20,7 +20,8 @@ import (
 // Injectors from wire.go:
 
 func InitializeServer() (*App, error) {
-	applicationLogger := applog.NewApplicationLogger()
+	writer := applog.NewWriter()
+	applicationLogger := applog.NewApplicationLogger(writer)
 	server := request.NewServer(applicationLogger)
 	loggingMiddleware := request.NewLoggingMiddleware(applicationLogger)
 	memoryStoreManager := store.NewMemoryStore()
@@ -34,6 +35,7 @@ func InitializeServer() (*App, error) {
 		Logger:            applicationLogger,
 		LoggingMiddleware: loggingMiddleware,
 		V1Routers:         v1Routers,
+		V1Handlers:        v1Handlers,
 		StoreManager:      memoryStoreManager,
 	}
 	return app, nil
@@ -46,7 +48,8 @@ type App struct {
 	Logger            applog.Logger
 	LoggingMiddleware *request.LoggingMiddleware
 	V1Routers         *presentation.V1Routers
+	V1Handlers        *presentation.V1Handlers
 	StoreManager      store.StoreManager
 }
 
-var AppSet = wire.NewSet(applog.NewApplicationLogger, wire.Bind(new(applog.Logger), new(*applog.ApplicationLogger)), store.NewMemoryStore, wire.Bind(new(store.StoreManager), new(*store.MemoryStoreManager)), request.NewServer, request.NewLoggingMiddleware, presentation.NewV1Routers, presentation.NewV1Handlers, infra.NewMemoryUrlRepository, wire.Bind(new(domain.UrlRepository), new(*infra.MemoryUrlRepository)), application.NewCreateShortUrlUseCaseImpl, wire.Bind(new(application.CreateShortUrlUseCase), new(*application.CreateShortUrlUseCaseImpl)), application.NewGetShortUrlUseCaseImpl, wire.Bind(new(application.GetShortUrlUseCase), new(*application.GetShortUrlUseCaseImpl)), wire.Struct(new(App), "*"))
+var AppSet = wire.NewSet(applog.NewWriter, applog.NewApplicationLogger, wire.Bind(new(applog.Logger), new(*applog.ApplicationLogger)), store.NewMemoryStore, wire.Bind(new(store.StoreManager), new(*store.MemoryStoreManager)), request.NewServer, request.NewLoggingMiddleware, presentation.NewV1Routers, presentation.NewV1Handlers, infra.NewMemoryUrlRepository, wire.Bind(new(domain.UrlRepository), new(*infra.MemoryUrlRepository)), application.NewCreateShortUrlUseCaseImpl, wire.Bind(new(application.CreateShortUrlUseCase), new(*application.CreateShortUrlUseCaseImpl)), application.NewGetShortUrlUseCaseImpl, wire.Bind(new(application.GetShortUrlUseCase), new(*application.GetShortUrlUseCaseImpl)), wire.Struct(new(App), "*"))

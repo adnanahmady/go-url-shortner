@@ -2,6 +2,7 @@ package applog
 
 import (
 	"fmt"
+	"io"
 	"log/slog"
 	"os"
 )
@@ -20,13 +21,31 @@ type Logger interface {
 }
 
 type ApplicationLogger struct {
-	lgr  *slog.Logger
-	args []Arg
+	lgr    *slog.Logger
+	args   []Arg
+	writer io.Writer
 }
 
-func NewApplicationLogger() *ApplicationLogger {
-	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
-	return &ApplicationLogger{lgr: logger}
+func NewWriter() io.Writer {
+	return os.Stdout
+}
+
+func NewApplicationLogger(w io.Writer) *ApplicationLogger {
+	return NewApplicationLoggerWithOptions(w)
+}
+
+func NewApplicationLoggerWithOptions(
+	w io.Writer,
+	options ...func(*slog.HandlerOptions),
+) *ApplicationLogger {
+	opts := &slog.HandlerOptions{
+		Level: slog.LevelInfo,
+	}
+	for _, opt := range options {
+		opt(opts)
+	}
+	logger := slog.New(slog.NewTextHandler(w, opts))
+	return &ApplicationLogger{lgr: logger, writer: w}
 }
 
 type Arg struct {
@@ -35,7 +54,7 @@ type Arg struct {
 }
 
 func (al *ApplicationLogger) With(args ...Arg) Logger {
-	newLgr := NewApplicationLogger()
+	newLgr := NewApplicationLogger(al.writer)
 	for _, arg := range args {
 		newLgr.lgr = newLgr.lgr.With(arg.Key, arg.Value)
 	}
@@ -49,7 +68,7 @@ func (al *ApplicationLogger) Section(section string, operation string) Logger {
 		Arg{Key: "section", Value: section},
 		Arg{Key: "operation", Value: operation},
 	)
-	
+
 	return al.With(args...)
 }
 

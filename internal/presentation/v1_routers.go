@@ -5,7 +5,7 @@ import (
 )
 
 type V1Routers struct {
-	server *request.Server
+	server     *request.Server
 	v1Handlers *V1Handlers
 }
 
