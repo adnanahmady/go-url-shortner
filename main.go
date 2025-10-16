@@ -15,19 +15,36 @@ const (
 )
 
 func main() {
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+
 	app, err := internal.InitializeServer()
 	if err != nil {
 		log.Fatal(err)
 	}
 	loadUrls(app)
-	setupGracefulShutdown(app)
-
 	app.Server.Use(app.LoggingMiddleware.Middleware)
-
 	app.V1Routers.Register()
+	runServer(app)
 
-	app.Server.Run(port)
-	app.Logger.Infof("Server stoped on port (%v)", port)
+	<-c
+	gracefulShutdown(app)
+}
+
+func runServer(app *internal.App) {
+	go func() {
+		if err := app.Server.Run(port); err != nil {
+			app.Logger.Errorf("Failed to run server on port (%v): (%v)", port, err.Error())
+			os.Exit(1)
+		}
+	}()
+}
+
+func gracefulShutdown(app *internal.App) {
+	app.Logger.Infof("Starting graceful shutdown...")
+	app.Server.Shutdown()
+	saveUrls(app)
+	app.Logger.Infof("Graceful shutdown completed successfully")
 }
 
 func loadUrls(app *internal.App) {
@@ -56,19 +73,6 @@ func loadUrls(app *internal.App) {
 		storageFile,
 		app.StoreManager.Count(),
 	)
-}
-
-func setupGracefulShutdown(app *internal.App) {
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-
-	go func() {
-		<-c
-		app.Logger.Infof("Starting graceful shutdown...")
-		saveUrls(app)
-		app.Logger.Infof("Graceful shutdown completed successfully")
-		os.Exit(0)
-	}()
 }
 
 func saveUrls(app *internal.App) {
