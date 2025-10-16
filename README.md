@@ -18,6 +18,7 @@ or loggin on the files, etc.
 * [Commands](#commands)
     * [Run application](#run-application)
     * [Run automated tests](#run-tests)
+    * [Get test coverage](#get-test-coverage)
     * [Fix code style](#fix-code-style)
     * [Build the application](#build-the-application)
 * [Project structure](#project-structure)
@@ -86,6 +87,20 @@ or alternatively
 
 ```bash
 make t
+```
+
+### Get test coverage
+
+You can get application test coverage by this command
+
+```bash
+make test.coverage
+```
+
+or alternatively
+
+```bash
+make tc
 ```
 
 ### Fix code style
