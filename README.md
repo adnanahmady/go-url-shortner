@@ -16,6 +16,11 @@ or loggin on the files, etc.
 * [Usage](#usage)
     * [Step 1: shorten url](#step-1-shorten-a-url-post-request)
     * [Step 2: redirect from short url](#step-2-redirect-from-a-short-url-get-request)
+* [Commands](#commands)
+    * [Run application](#run-application)
+    * [Run automated tests](#run-tests)
+    * [Fix code style](#fix-code-style)
+    * [Build the application](#build-the-application)
 
 ## Installation
 
@@ -55,4 +60,46 @@ Access the generated short URL in your browser or with `curl`.
 # In your browser: http://localhost:5000/aBcDef
 # Or using curl:
 curl -L http://localhost:5000/aBcDef
+```
+
+## Commands
+
+You can use prepared make commands for easier use
+
+### Run application
+
+Run the application using
+
+```bash
+make run
+```
+
+### Run tests
+
+You can run the applicaiton tests by this command
+
+```bash
+make test
+```
+
+or alternatively
+
+```bash
+make t
+```
+
+### Fix code style
+
+You can fix code style by this command
+
+```bash
+make lint
+```
+
+### Build the application
+
+You can build the app by this command
+
+```bash
+make build
 ```
