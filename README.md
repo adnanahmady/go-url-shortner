@@ -20,6 +20,7 @@ or loggin on the files, etc.
     * [Run automated tests](#run-tests)
     * [Fix code style](#fix-code-style)
     * [Build the application](#build-the-application)
+* [Project structure](#project-structure)
 
 ## Installation
 
@@ -101,4 +102,56 @@ You can build the app by this command
 
 ```bash
 make build
+```
+
+## Project Structure
+
+Here is a view of the project structure
+
+```bash
+.
+├── go.mod
+├── go.sum
+├── internal # the application itself (clean architecture)
+│   ├── application # application layer
+│   │   ├── create_short_url_use_case.go
+│   │   ├── errors.go # application layer error variables
+│   │   └── get_short_url_use_case.go
+│   ├── domain # domain layer
+│   │   ├── errors.go # domain layer errors
+│   │   └── repositories.go # repository interfaces
+│   ├── infra # infrastructure layer
+│   │   └── memory_url_repository.go # url repository memory implementation
+│   ├── integration # api tests (these tests evaluate the application behaviour and are not unit tests)
+│   │   ├── create_short_code_test.go
+│   │   └── redirect_to_url_test.go
+│   ├── presentation # presentation layer
+│   │   ├── v1_handlers.go
+│   │   └── v1_routers.go
+│   ├── wire_gen.go
+│   └── wire.go # dependency injection manager
+├── LICENSE
+├── main.go
+├── main_test.go
+├── Makefile
+├── pkg # shared pacakges of the application
+│   ├── applog # application logger
+│   │   ├── logger.go
+│   │   └── logger_test.go
+│   ├── reqeust # request utils
+│   │   ├── context.go
+│   │   ├── log.go # logger middleware
+│   │   └── server.go # wrapper arround the net/http package
+│   ├── store
+│   │   ├── errors.go
+│   │   └── memory.go
+│   └── test # test helpers
+│       ├── assert # test assertions
+│       │   └── assertions.go
+│       ├── requests.go # testing request utils
+│       └── setup.go # test setup
+├── README.md
+└── urls.json # json storage file (generated and updated by the applciation)
+
+13 directories, 30 files
 ```
