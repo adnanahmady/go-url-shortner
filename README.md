@@ -1,7 +1,6 @@
 # go-url-shortner
 
-This is a simple in memory url shortner built with the `net/http` package itself,
-by restarting the application all data is reset.
+This is a simple in memory url shortner built with the `net/http` package itself.
 
 **Caution:** the persistance of data is handled by storing in a json file named `urls.json`,
 for the first time the file doesn't exist.
