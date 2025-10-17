@@ -38,19 +38,17 @@ func main() {
 	loadUrls(app)
 	app.Server.Use(app.LoggingMiddleware.Middleware)
 	app.V1Routers.Register()
-	runServer(app)
+	go runServer(app)
 
 	<-c
 	gracefulShutdown(app)
 }
 
 func runServer(app *internal.App) {
-	go func() {
-		if err := app.Server.Run(port); err != nil {
-			app.Logger.Errorf("Failed to run server on port (%v): (%v)", port, err.Error())
-			os.Exit(1)
-		}
-	}()
+	if err := app.Server.Run(port); err != nil {
+		app.Logger.Errorf("Failed to run server on port (%v): (%v)", port, err.Error())
+		os.Exit(1)
+	}
 }
 
 func gracefulShutdown(app *internal.App) {
