@@ -2,32 +2,27 @@ package request
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/adnanahmady/go-url-shortner/pkg/applog"
 )
 
 var (
-	loggerKey    = &struct{}{}
-	requestIDKey = &struct{}{}
+	loggerKey    = &struct{ uint8 }{}
+	requestIDKey = &struct{ uint8 }{}
 )
 
 func GetLogger(ctx context.Context) applog.Logger {
-	key := fmt.Sprintf("%v", &loggerKey)
-	return ctx.Value(key).(applog.Logger)
-}
-
-func GetRequestID(ctx context.Context) string {
-	key := fmt.Sprintf("%v", &requestIDKey)
-	return ctx.Value(key).(string)
+	return ctx.Value(loggerKey).(applog.Logger)
 }
 
 func SetLogger(ctx context.Context, logger applog.Logger) context.Context {
-	key := fmt.Sprintf("%v", &loggerKey)
-	return context.WithValue(ctx, key, logger)
+	return context.WithValue(ctx, loggerKey, logger)
+}
+
+func GetRequestID(ctx context.Context) string {
+	return ctx.Value(requestIDKey).(string)
 }
 
 func SetRequestID(ctx context.Context, requestID string) context.Context {
-	key := fmt.Sprintf("%v", &requestIDKey)
-	return context.WithValue(ctx, key, requestID)
+	return context.WithValue(ctx, requestIDKey, requestID)
 }
